@@ -52,7 +52,7 @@ function PricingSection(props) {
     {
       id: "starter",
       name: "Starter",
-      price: "10",
+      price: "1",
       perks: [
         "Lorem ipsum dolor sit amet",
         "Consectetur adipiscing elit",
@@ -62,7 +62,7 @@ function PricingSection(props) {
     {
       id: "pro",
       name: "Pro",
-      price: "20",
+      price: "10",
       perks: [
         "Lorem ipsum dolor sit amet",
         "Consectetur adipiscing elit",
@@ -74,7 +74,7 @@ function PricingSection(props) {
     {
       id: "business",
       name: "Business",
-      price: "50",
+      price: "100",
       perks: [
         "Lorem ipsum dolor sit amet",
         "Consectetur adipiscing elit",
@@ -110,7 +110,7 @@ function PricingSection(props) {
                     {plan.name}
                   </Typography>
                   <Box className={classes.price} mt={1}>
-                    <Typography variant="h3">${plan.price}</Typography>
+                    <Typography variant="h3">€{plan.price}</Typography>
                     <Typography variant="h4" color="textSecondary">
                       /mo
                     </Typography>
