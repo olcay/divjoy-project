@@ -12,6 +12,11 @@ import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "./../util/auth";
 import { useItem, updateItem, createItem } from "./../util/db";
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
 
 const useStyles = makeStyles((theme) => ({
   content: {
@@ -28,6 +33,15 @@ function EditItemModal(props) {
 
   const { register, handleSubmit, errors } = useForm();
 
+  const [interval, setInterval] = useState('interval');
+
+  const handleChange = (event) => {
+    setInterval(event.target.value);
+    if (itemData) {
+      itemData.interval = event.target.value;
+    }
+  };
+
   // This will fetch item if props.id is defined
   // Otherwise query does nothing and we assume
   // we are creating a new item.
@@ -41,6 +55,7 @@ function EditItemModal(props) {
 
   const onSubmit = (data) => {
     setPending(true);
+    data.interval = interval;
 
     const query = props.id
       ? updateItem(props.id, data)
@@ -93,6 +108,55 @@ function EditItemModal(props) {
                   required: "Please enter a name",
                 })}
               />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                variant="outlined"
+                type="text"
+                label="Recipient"
+                name="recipient"
+                defaultValue={itemData && itemData.recipient}
+                error={errors.recipient ? true : false}
+                helperText={errors.recipient && errors.recipient.message}
+                fullWidth={true}
+                autoFocus={true}
+                inputRef={register({
+                  required: "Please enter a recipient email address",
+                })}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                variant="outlined"
+                multiline
+                minRows={4}
+                label="Message"
+                name="message"
+                defaultValue={itemData && itemData.message}
+                error={errors.message ? true : false}
+                helperText={errors.message && errors.message.message}
+                fullWidth={true}
+                autoFocus={true}
+                inputRef={register({
+                  required: "Please enter a message",
+                })}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <FormControl>
+                <FormLabel id="interval-label">Interval</FormLabel>
+                <RadioGroup
+                  row
+                  name="interval"
+                  value={itemData && itemData.interval}
+                  defaultValue="1M"
+                  onChange={handleChange}
+                >
+                  <FormControlLabel value="1M" control={<Radio />} label="1 month" />
+                  <FormControlLabel value="6M" control={<Radio />} label="6 months" />
+                  <FormControlLabel value="12M" control={<Radio />} label="12 months" />
+                </RadioGroup>
+              </FormControl>
             </Grid>
             <Grid item={true} xs={12}>
               <Button
