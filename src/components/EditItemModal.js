@@ -33,12 +33,38 @@ function EditItemModal(props) {
 
   const { register, handleSubmit, errors } = useForm();
 
-  const [interval, setInterval] = useState('interval');
+  const [interval, setInterval] = useState('1M');
+  const [sendDate, setSendDate] = useState(addMonths(1));
+  const [hasIntervalChanged, setHasIntervalChanged] = useState(false);
+
+  function addMonths(months) {
+    var date = new Date();
+    return new Date(date.setMonth(date.getMonth() + months)).getTime();
+  }
+
+
+
+  function generateRandomCode(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    const charactersLength = characters.length;
+
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+
+    return result;
+  }
 
   const handleChange = (event) => {
+    setHasIntervalChanged(true);
     setInterval(event.target.value);
+    const months = parseFloat(event.target.value.slice(0, -1));
+    setSendDate(addMonths(months));
+
     if (itemData) {
       itemData.interval = event.target.value;
+      itemData.sendDate = addMonths(months);
     }
   };
 
@@ -55,7 +81,18 @@ function EditItemModal(props) {
 
   const onSubmit = (data) => {
     setPending(true);
-    data.interval = interval;
+
+    if (props.id) {
+      if (hasIntervalChanged) {
+        data.interval = interval;
+        data.sendDate = sendDate;
+      }
+    } else {
+      data.postponeCode = generateRandomCode(10);
+      data.isActive = true;
+      data.interval = interval;
+      data.sendDate = sendDate;
+    }
 
     const query = props.id
       ? updateItem(props.id, data)
@@ -82,7 +119,7 @@ function EditItemModal(props) {
       <DialogTitle>
         {props.id && <>Update</>}
         {!props.id && <>Create</>}
-        {` `}Item
+        {` `}Message
       </DialogTitle>
       <DialogContent className={classes.content}>
         {formAlert && (
@@ -97,7 +134,7 @@ function EditItemModal(props) {
               <TextField
                 variant="outlined"
                 type="text"
-                label="Name"
+                label="Title"
                 name="name"
                 defaultValue={itemData && itemData.name}
                 error={errors.name ? true : false}
@@ -105,14 +142,14 @@ function EditItemModal(props) {
                 fullWidth={true}
                 autoFocus={true}
                 inputRef={register({
-                  required: "Please enter a name",
+                  required: "Please enter a title",
                 })}
               />
             </Grid>
             <Grid item={true} xs={12}>
               <TextField
                 variant="outlined"
-                type="text"
+                type="email"
                 label="Recipient"
                 name="recipient"
                 defaultValue={itemData && itemData.recipient}
@@ -156,6 +193,12 @@ function EditItemModal(props) {
                   <FormControlLabel value="6M" control={<Radio />} label="6 months" />
                   <FormControlLabel value="12M" control={<Radio />} label="12 months" />
                 </RadioGroup>
+              </FormControl>
+            </Grid>
+            <Grid item={true} xs={12}>
+              <FormControl>
+                <FormLabel>The message will be sent on {itemData ? new Date(itemData.sendDate).toDateString() : new Date(sendDate).toDateString()}.</FormLabel>
+
               </FormControl>
             </Grid>
             <Grid item={true} xs={12}>

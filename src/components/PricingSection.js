@@ -52,7 +52,7 @@ function PricingSection(props) {
     {
       id: "starter",
       name: "Starter",
-      price: "1",
+      price: "0",
       perks: [
         "Lorem ipsum dolor sit amet",
         "Consectetur adipiscing elit",

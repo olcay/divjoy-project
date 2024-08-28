@@ -11,6 +11,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
+import Tooltip from '@material-ui/core/Tooltip';
 import StarIcon from "@material-ui/icons/Star";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
@@ -18,6 +19,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import EditItemModal from "./EditItemModal";
 import { useAuth } from "./../util/auth";
 import { updateItem, deleteItem, useItemsByOwner } from "./../util/db";
+import ToggleOnIcon from '@material-ui/icons/ToggleOn';
+import ToggleOffIcon from '@material-ui/icons/ToggleOff';
 
 const useStyles = makeStyles((theme) => ({
   paperItems: {
@@ -29,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
   },
   starFeatured: {
     color: theme.palette.warning.main,
+  },
+  isNotActive: {
+    color: theme.palette.action.disabled,
   },
 }));
 
@@ -61,6 +67,10 @@ function DashboardItems(props) {
     }
   };
 
+  const handleToggleItem = (item) => {
+    updateItem(item.id, { isActive: !item.isActive });
+  };
+
   return (
     <>
       {itemsError && (
@@ -76,14 +86,14 @@ function DashboardItems(props) {
           alignItems="center"
           padding={2}
         >
-          <Typography variant="h5">Items</Typography>
+          <Typography variant="h5">Messages</Typography>
           <Button
             variant="contained"
             size="medium"
             color="primary"
             onClick={() => setCreatingItem(true)}
           >
-            Add Item
+            Add Message
           </Button>
         </Box>
         <Divider />
@@ -93,7 +103,7 @@ function DashboardItems(props) {
             {itemsStatus === "loading" && <CircularProgress size={32} />}
 
             {itemsStatus !== "loading" && itemsAreEmpty && (
-              <>Nothing yet. Click the button to add your first item.</>
+              <>Nothing yet. Click the button to add your first message.</>
             )}
           </Box>
         )}
@@ -108,28 +118,42 @@ function DashboardItems(props) {
               >
                 <ListItemText>{item.name}</ListItemText>
                 <ListItemSecondaryAction>
-                  <IconButton
+                  <Tooltip title={item.isActive ? "Enabled" : "Disabled"}>
+                    <IconButton
+                      edge="end"
+                      aria-label="toggle"
+                      onClick={() => handleToggleItem(item)}
+                      className={item.isActive ? "" : classes.isNotActive}
+                    >
+                      {item.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
+                    </IconButton>
+                  </Tooltip>
+                  {/* <IconButton
                     edge="end"
                     aria-label="star"
                     onClick={() => handleStarItem(item)}
                     className={item.featured ? classes.starFeatured : ""}
                   >
                     <StarIcon />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="update"
-                    onClick={() => setUpdatingItemId(item.id)}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    edge="end"
-                    aria-label="delete"
-                    onClick={() => deleteItem(item.id)}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
+                  </IconButton> */}
+                  <Tooltip title="Edit">
+                    <IconButton
+                      edge="end"
+                      aria-label="update"
+                      onClick={() => setUpdatingItemId(item.id)}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Remove">
+                    <IconButton
+                      edge="end"
+                      aria-label="delete"
+                      onClick={() => deleteItem(item.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Tooltip>
                 </ListItemSecondaryAction>
               </ListItem>
             ))}
