@@ -12,6 +12,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import Section from "./Section";
 import { Link } from "./../util/router";
 import { useDarkMode } from "./../util/theme";
+import RssFeedIcon from "@material-ui/icons/RssFeed";
+import TwitterIcon from "@material-ui/icons/Twitter";
 
 const useStyles = makeStyles((theme) => ({
   sticky: {
@@ -140,16 +142,6 @@ function Footer(props) {
                   >
                     <ListItemText>Contact</ListItemText>
                   </ListItem>
-                  <ListItem
-                    button={true}
-                    component="a"
-                    href="https://medium.com"
-                    target="_blank"
-                    rel="noreferrer"
-                    className={classes.listItem}
-                  >
-                    <ListItemText>Blog</ListItemText>
-                  </ListItem>
                 </List>
               </Grid>
               <Grid item={true} xs={12} md={4}>
@@ -165,20 +157,26 @@ function Footer(props) {
                   <ListItem
                     button={true}
                     component="a"
-                    href="https://twitter.com/divjoy"
+                    href="https://twitter.com/kaliteai"
                     target="_blank"
                     rel="noreferrer"
                     className={classes.listItem}
                   >
-                    <ListItemIcon className={classes.socialIcon}>
-                      <img
-                        src="https://uploads.divjoy.com/icon-twitter.svg"
-                        alt="Facebook"
-                      />
-                    </ListItemIcon>
+                    <TwitterIcon className={classes.socialIcon}/>
                     <ListItemText>Twitter</ListItemText>
                   </ListItem>
                   <ListItem
+                    button={true}
+                    component="a"
+                    href="https://olcay.dev"
+                    target="_blank"
+                    rel="noreferrer"
+                    className={classes.listItem}
+                  >
+                    <RssFeedIcon className={classes.socialIcon}/>
+                    <ListItemText>Blog</ListItemText>
+                  </ListItem>
+                  {/* <ListItem
                     button={true}
                     component="a"
                     href="https://facebook.com/DivjoyOfficial"
@@ -209,7 +207,7 @@ function Footer(props) {
                       />
                     </ListItemIcon>
                     <ListItemText>Instagram</ListItemText>
-                  </ListItem>
+                  </ListItem> */}
                 </List>
               </Grid>
             </Grid>

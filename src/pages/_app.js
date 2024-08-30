@@ -30,8 +30,8 @@ function App(props) {
             <>
               <Navbar
                 color="default"
-                logo="https://uploads.divjoy.com/logo.svg"
-                logoInverted="https://uploads.divjoy.com/logo-white.svg"
+                logo="/logo.png"
+                logoInverted="/logo_inverted.png"
               />
 
               <Switch>
@@ -73,10 +73,10 @@ function App(props) {
                 size="medium"
                 bgImage=""
                 bgImageOpacity={1}
-                description="A short description of what you do here"
-                copyright={`© ${new Date().getFullYear()} Company`}
-                logo="https://uploads.divjoy.com/logo.svg"
-                logoInverted="https://uploads.divjoy.com/logo-white.svg"
+                description="Send important messages when the time is right."
+                copyright={`© ${new Date().getFullYear()} Lenny's App`}
+                logo="/logo.png"
+                logoInverted="/logo_inverted.png"
                 sticky={true}
               />
             </>

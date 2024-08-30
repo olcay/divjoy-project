@@ -31,23 +31,11 @@ function TeamBiosSection(props) {
 
   const items = [
     {
-      avatar: "https://uploads.divjoy.com/pravatar-150x-68.jpeg",
-      name: "John Smith",
-      role: "Software Engineer",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum consequatur numquam aliquam tenetur ad amet inventore hic beatae, quas accusantium perferendis sapiente explicabo.",
-    },
-    {
-      avatar: "https://uploads.divjoy.com/pravatar-150x-35.jpeg",
-      name: "Lisa Zinn",
-      role: "Software Engineer",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum consequatur numquam aliquam tenetur ad amet inventore hic beatae, quas accusantium perferendis sapiente explicabo, corporis totam! Labore reprehenderit beatae magnam animi!",
-    },
-    {
-      avatar: "https://uploads.divjoy.com/pravatar-150x-16.jpeg",
-      name: "Diana Low",
-      role: "Designer",
-      bio: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorum consequatur numquam aliquam tenetur ad amet inventore hic beatae, quas accusantium perferendis sapiente explicabo, corporis totam! Labore reprehenderit beatae magnam animi!",
-    },
+      avatar: "https://1.gravatar.com/avatar/42af46f2cdddc7a544c59af04036e444e2e449da9cd0e3bdb12fba6515ec8389?size=256",
+      name: "Olcay Bayram",
+      role: "Senior Software Engineer",
+      bio: "Builds SaaS for breakfast.",
+    }
   ];
 
   return (
