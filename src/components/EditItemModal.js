@@ -6,6 +6,7 @@ import Box from "@material-ui/core/Box";
 import Alert from "@material-ui/lab/Alert";
 import Grid from "@material-ui/core/Grid";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { useForm } from "react-hook-form";
@@ -135,10 +136,10 @@ function EditItemModal(props) {
                 variant="outlined"
                 type="text"
                 label="Title"
-                name="name"
-                defaultValue={itemData && itemData.name}
-                error={errors.name ? true : false}
-                helperText={errors.name && errors.name.message}
+                name="title"
+                defaultValue={itemData && itemData.title}
+                error={errors.title ? true : false}
+                helperText={errors.title && errors.title.message}
                 fullWidth={true}
                 autoFocus={true}
                 inputRef={register({
@@ -149,8 +150,24 @@ function EditItemModal(props) {
             <Grid item={true} xs={12}>
               <TextField
                 variant="outlined"
+                type="text"
+                label="Recipient Name"
+                name="name"
+                defaultValue={itemData && itemData.name}
+                error={errors.name ? true : false}
+                helperText={errors.name && errors.name.message}
+                fullWidth={true}
+                autoFocus={true}
+                inputRef={register({
+                  required: "Please enter a recipient name",
+                })}
+              />
+            </Grid>
+            <Grid item={true} xs={12}>
+              <TextField
+                variant="outlined"
                 type="email"
-                label="Recipient"
+                label="Recipient Email"
                 name="recipient"
                 defaultValue={itemData && itemData.recipient}
                 error={errors.recipient ? true : false}
@@ -181,7 +198,7 @@ function EditItemModal(props) {
             </Grid>
             <Grid item={true} xs={12}>
               <FormControl>
-                <FormLabel id="interval-label">Interval</FormLabel>
+                <FormLabel id="interval-label">Deliver in</FormLabel>
                 <RadioGroup
                   row
                   name="interval"
@@ -196,10 +213,10 @@ function EditItemModal(props) {
               </FormControl>
             </Grid>
             <Grid item={true} xs={12}>
-              <FormControl>
-                <FormLabel>The message will be sent on {itemData ? new Date(itemData.sendDate).toDateString() : new Date(sendDate).toDateString()}.</FormLabel>
-
-              </FormControl>
+              <Typography>
+                The message will be delivered on {itemData ?
+                  new Date(itemData.sendDate).toDateString() : new Date(sendDate).toDateString()}.
+              </Typography>
             </Grid>
             <Grid item={true} xs={12}>
               <Button

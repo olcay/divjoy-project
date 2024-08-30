@@ -55,9 +55,13 @@ function DashboardItems(props) {
 
   const itemsAreEmpty = !items || items.length === 0;
 
-  const canUseStar =
+  const hasActivePlan =
     auth.user.planIsActive &&
     (auth.user.planId === "pro" || auth.user.planId === "business");
+
+  const canAddMoreItem = hasActivePlan || itemsAreEmpty;
+
+  const canUseStar = hasActivePlan;
 
   const handleStarItem = (item) => {
     if (canUseStar) {
@@ -87,14 +91,19 @@ function DashboardItems(props) {
           padding={2}
         >
           <Typography variant="h5">Messages</Typography>
-          <Button
-            variant="contained"
-            size="medium"
-            color="primary"
-            onClick={() => setCreatingItem(true)}
-          >
-            Add Message
-          </Button>
+          <Tooltip title={canAddMoreItem ? "" : "Upgrade your plan"}>
+            <span>
+              <Button
+                variant="contained"
+                size="medium"
+                color="primary"
+                onClick={() => setCreatingItem(true)}
+                disabled={!canAddMoreItem}
+              >
+                Add Message
+              </Button>
+            </span>
+          </Tooltip>
         </Box>
         <Divider />
 
@@ -103,7 +112,10 @@ function DashboardItems(props) {
             {itemsStatus === "loading" && <CircularProgress size={32} />}
 
             {itemsStatus !== "loading" && itemsAreEmpty && (
-              <>Nothing yet. Click the button to add your first message.</>
+              <>
+                Nothing yet. Click the button to add your first message.
+                {!hasActivePlan && (<> Remaining messages: 1</>)}
+              </>
             )}
           </Box>
         )}
@@ -116,7 +128,7 @@ function DashboardItems(props) {
                 divider={index !== items.length - 1}
                 className={item.featured ? classes.featured : ""}
               >
-                <ListItemText>{item.name}</ListItemText>
+                <ListItemText>{item.title}</ListItemText>
                 <ListItemSecondaryAction>
                   <Tooltip title={item.isActive ? "Enabled" : "Disabled"}>
                     <IconButton

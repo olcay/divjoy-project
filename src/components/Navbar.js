@@ -95,7 +95,7 @@ function Navbar(props) {
                       handleOpenMenu(event, "account-menu");
                     }}
                   >
-                    Account
+                    {auth.user.name ? auth.user.name : "Account"}
                     <ExpandMoreIcon className={classes.buttonIcon} />
                   </Button>
                   <Menu

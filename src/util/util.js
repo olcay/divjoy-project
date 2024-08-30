@@ -60,3 +60,7 @@ export function usePrevious(state) {
   });
   return ref.current;
 }
+
+export function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}

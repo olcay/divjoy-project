@@ -13,6 +13,7 @@ import SectionHeader from "./SectionHeader";
 import DashboardItems from "./DashboardItems";
 import { Link, useRouter } from "./../util/router";
 import { useAuth } from "./../util/auth";
+import { capitalizeFirstLetter } from "./../util/util";
 
 const useStyles = makeStyles((theme) => ({
   cardContent: {
@@ -25,6 +26,10 @@ function DashboardSection(props) {
 
   const auth = useAuth();
   const router = useRouter();
+
+  const hasActivePlan =
+    auth.user.planIsActive &&
+    (auth.user.planId === "pro" || auth.user.planId === "business");
 
   return (
     <Section
@@ -68,67 +73,61 @@ function DashboardSection(props) {
                     <strong>What is this?</strong>
                   </Typography>
                   <Typography paragraph={true}>
-                    The component on your left is an example UI that shows you
-                    how to fetch, display, and update a list of items that
-                    belong to the current authenticated user. Try it now by
-                    adding a couple items.
+                    Manage your messages here.
                   </Typography>
                   <Typography paragraph={true}>
-                    It also shows how you can limit features based on plan. If
-                    you're subscribed to the "pro" or "business" plan then
-                    you'll be able to use the star button to highlight items,
-                    otherwise you'll be asked to upgrade your plan.
+                    Give your message a title to remember it easily.
+                    The title will not be used in the email.
                   </Typography>
                   <Typography paragraph={true}>
-                    After exporting your code, you'll want to modify this
-                    component to your needs. You may also find it easier to just
-                    use this component as a reference as you build out your
-                    custom UI.
+                    You will get a reminder email <strong>10 days</strong> before the delivery date.
+                    You may postpone the delivery through a link in that email or
+                    you can update the message delivery date by changing the duration here.
                   </Typography>
                   <Box mt={3}>
                     <Typography variant="h6" paragraph={true}>
-                      <strong>Extra debug info</strong>
+                      <strong>Subscription</strong>
                     </Typography>
                     <Typography component="div">
-                      <div>
-                        You are signed in as <strong>{auth.user.email}</strong>.
-                      </div>
-
-                      {auth.user.stripeSubscriptionId && (
+                      {!auth.user.name && (
                         <>
                           <div>
-                            You are subscribed to the{" "}
-                            <strong>{auth.user.planId} plan</strong>.
-                          </div>
-                          <div>
-                            Your plan status is{" "}
-                            <strong>
-                              {auth.user.stripeSubscriptionStatus}
-                            </strong>
+                            Your name is empty. It would be better for the recipient to see your name.{` `}
+                            You can add your name to your account info{` `}
+                            in{` `}
+                            <LinkMui component={Link} to="/settings/general">
+                              <strong>settings</strong>
+                            </LinkMui>
                             .
                           </div>
                         </>
                       )}
 
-                      <div>
-                        You can change your account info{` `}
-                        {auth.user.stripeSubscriptionId && <>and plan{` `}</>}
-                        in{` `}
-                        <LinkMui component={Link} to="/settings/general">
-                          <strong>settings</strong>
-                        </LinkMui>
-                        .
-                      </div>
-
-                      {!auth.user.stripeSubscriptionId && (
-                        <div>
-                          You can signup for a plan in{" "}
-                          <LinkMui component={Link} to="/pricing">
-                            <strong>pricing</strong>
-                          </LinkMui>
-                          .
-                        </div>
+                      {!hasActivePlan && (
+                        <>
+                          <div>
+                            You are not subscribed to any plan yet. You can only add <strong>1 message</strong>.
+                          </div>
+                          <div>
+                            You can subscribe to a plan in{" "}
+                            <LinkMui component={Link} to="/pricing">
+                              <strong>pricing</strong>
+                            </LinkMui>
+                            .
+                          </div>
+                        </>
                       )}
+
+                      {hasActivePlan && (
+                        <>
+                          <div>
+                            You are subscribed to the{" "}
+                            <strong>{capitalizeFirstLetter(auth.user.planId)} plan</strong>.
+                          </div>
+                        </>
+                      )}
+
+
                     </Typography>
                   </Box>
                 </Box>
