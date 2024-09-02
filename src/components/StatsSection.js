@@ -8,20 +8,16 @@ import Section from "./Section";
 function StatsSection(props) {
   const items = [
     {
-      title: "Tweets",
-      stat: "3,456",
+      title: "Users",
+      stat: "542",
     },
     {
-      title: "Following",
+      title: "Messages Delivered",
       stat: "123",
     },
     {
-      title: "Followers",
-      stat: "456k",
-    },
-    {
-      title: "Likes",
-      stat: "789",
+      title: "Messages Waiting",
+      stat: "456",
     },
   ];
 

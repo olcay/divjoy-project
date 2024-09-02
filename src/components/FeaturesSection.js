@@ -33,25 +33,26 @@ function FeaturesSection(props) {
 
   const items = [
     {
-      title: "Lorem Ipsum",
-      body: "Integer ornare neque mauris, ac vulputate lacus venenatis et. Pellentesque ut ultrices purus.",
+      title: "Create",
+      body: "Create a message for the future.",
       image: "https://uploads.divjoy.com/undraw-fish_bowl_uu88.svg",
     },
     {
-      title: "Lorem Ipsum",
-      body: "Nunc nulla mauris, laoreet vel cursus lacinia, consectetur sit amet tellus.",
-      image: "https://uploads.divjoy.com/undraw-directions_x53j.svg",
+      title: "Secure",
+      body: "Lenny's App sets the message aside securely.",
+      image: "https://uploads.divjoy.com/undraw-personal_settings_kihd.svg",
     },
     {
-      title: "Lorem Ipsum",
-      body: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In lobortis, metus et mattis ullamcorper",
+      title: "Postpone",
+      body: "Postpone the delivery as long as you want.",
       image: "https://uploads.divjoy.com/undraw-stability_ball_b4ia.svg",
     },
     {
-      title: "Lorem Ipsum",
-      body: "Suspendisse ut tincidunt eros. In velit mi, rhoncus dictum neque a, tincidunt lobortis justo",
-      image: "https://uploads.divjoy.com/undraw-personal_settings_kihd.svg",
+      title: "Deliver",
+      body: "If circumstances prevent you from postponing it any longer, the app automatically delivers your message.",
+      image: "https://uploads.divjoy.com/undraw-directions_x53j.svg",
     },
+    
   ];
 
   return (

@@ -18,7 +18,7 @@ function IndexPage(props) {
         bgImage="https://images.unsplash.com/photo-1560863185-a4f6199b5768?auto=format&fit=crop&w=1600&h=800&q=80"
         bgImageOpacity={0.3}
         title="Send important messages when the time is right!"
-        subtitle="Create an email for the future and set it aside securely. If circumstances prevent you from postponing it any longer, the app automatically delivers your message to the intended recipient. Whether it’s a heartfelt letter or crucial information, Lenny's app ensures your words are delivered, even if you can’t be there to send them yourself."
+        subtitle="Whether it’s a heartfelt letter or crucial information, Lenny's app ensures your words are delivered, even if you can’t be there to send them yourself."
         buttonText="Get Started"
         buttonColor="default"
         buttonPath="/pricing"
@@ -28,8 +28,8 @@ function IndexPage(props) {
         size="medium"
         bgImage=""
         bgImageOpacity={1}
-        title="Features"
-        subtitle="All the features you need to move faster"
+        title="Steps"
+        subtitle="All the steps you need to secure your message"
       />
       {/* <ClientsSection
         bgColor="light"

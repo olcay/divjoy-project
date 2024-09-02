@@ -12,15 +12,13 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import IconButton from "@material-ui/core/IconButton";
 import Tooltip from '@material-ui/core/Tooltip';
-import StarIcon from "@material-ui/icons/Star";
-import EditIcon from "@material-ui/icons/Edit";
-import DeleteIcon from "@material-ui/icons/Delete";
 import { makeStyles } from "@material-ui/core/styles";
 import EditItemModal from "./EditItemModal";
 import { useAuth } from "./../util/auth";
-import { updateItem, deleteItem, useItemsByOwner } from "./../util/db";
-import ToggleOnIcon from '@material-ui/icons/ToggleOn';
-import ToggleOffIcon from '@material-ui/icons/ToggleOff';
+import { updateItem, useItemsByOwner } from "./../util/db";
+import ToggleOnIcon from '@material-ui/icons/AlarmOn';
+import ToggleOffIcon from '@material-ui/icons/AlarmOff';
+import MoreTimeIcon from '@material-ui/icons/AddAlarm';
 
 const useStyles = makeStyles((theme) => ({
   paperItems: {
@@ -61,18 +59,29 @@ function DashboardItems(props) {
 
   const canAddMoreItem = hasActivePlan || itemsAreEmpty;
 
-  const canUseStar = hasActivePlan;
-
-  const handleStarItem = (item) => {
-    if (canUseStar) {
-      updateItem(item.id, { featured: !item.featured });
-    } else {
-      alert("You must upgrade to the pro or business plan to use this feature");
-    }
-  };
-
   const handleToggleItem = (item) => {
     updateItem(item.id, { isActive: !item.isActive });
+  };
+
+  function getStartAndEndOfDay(date) {
+    return [
+      new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime(),
+      new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999).getTime()
+    ];
+  }
+
+  const handlePostponeItem = (item) => {
+    var today = new Date();
+    const months = parseFloat(item.interval.slice(0, -1));
+    const newSendDate = new Date(today.setMonth(today.getMonth() + months));
+
+    const [startOfNewSendDate, endOfNewEndDate] = getStartAndEndOfDay(newSendDate);
+
+    if (item.sendDate >= startOfNewSendDate && item.sendDate <= endOfNewEndDate) {
+      return null;
+    }
+
+    updateItem(item.id, { sendDate: newSendDate.getTime() });
   };
 
   return (
@@ -127,10 +136,12 @@ function DashboardItems(props) {
                 key={index}
                 divider={index !== items.length - 1}
                 className={item.featured ? classes.featured : ""}
+                button={true}
+                onClick={() => setUpdatingItemId(item.id)}
               >
                 <ListItemText>{item.title}</ListItemText>
                 <ListItemSecondaryAction>
-                  <Tooltip title={item.isActive ? "Enabled" : "Disabled"}>
+                  <Tooltip title={item.isActive ? "On" : "Off"}>
                     <IconButton
                       edge="end"
                       aria-label="toggle"
@@ -140,30 +151,13 @@ function DashboardItems(props) {
                       {item.isActive ? <ToggleOnIcon /> : <ToggleOffIcon />}
                     </IconButton>
                   </Tooltip>
-                  {/* <IconButton
-                    edge="end"
-                    aria-label="star"
-                    onClick={() => handleStarItem(item)}
-                    className={item.featured ? classes.starFeatured : ""}
-                  >
-                    <StarIcon />
-                  </IconButton> */}
-                  <Tooltip title="Edit">
+                  <Tooltip title="Postpone">
                     <IconButton
                       edge="end"
-                      aria-label="update"
-                      onClick={() => setUpdatingItemId(item.id)}
+                      aria-label="postpone"
+                      onClick={() => handlePostponeItem(item)}
                     >
-                      <EditIcon />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title="Remove">
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => deleteItem(item.id)}
-                    >
-                      <DeleteIcon />
+                      <MoreTimeIcon />
                     </IconButton>
                   </Tooltip>
                 </ListItemSecondaryAction>

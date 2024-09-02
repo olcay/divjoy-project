@@ -12,7 +12,7 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { useForm } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
 import { useAuth } from "./../util/auth";
-import { useItem, updateItem, createItem } from "./../util/db";
+import { useItem, updateItem, createItem, deleteItem } from "./../util/db";
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -22,6 +22,11 @@ import FormLabel from '@material-ui/core/FormLabel';
 const useStyles = makeStyles((theme) => ({
   content: {
     paddingBottom: 24,
+  },
+  margin1: {
+    '& > button': {
+      marginRight: theme.spacing(1),
+    },
   },
 }));
 
@@ -42,8 +47,6 @@ function EditItemModal(props) {
     var date = new Date();
     return new Date(date.setMonth(date.getMonth() + months)).getTime();
   }
-
-
 
   function generateRandomCode(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -67,6 +70,19 @@ function EditItemModal(props) {
       itemData.interval = event.target.value;
       itemData.sendDate = addMonths(months);
     }
+  };
+
+  const handleDeleteItem = () => {
+    deleteItem(props.id).then(() => {
+      props.onDone();
+    })
+      .catch((error) => {
+        // Show error alert message
+        setFormAlert({
+          type: "error",
+          message: error.message,
+        });
+      });
   };
 
   // This will fetch item if props.id is defined
@@ -219,6 +235,7 @@ function EditItemModal(props) {
               </Typography>
             </Grid>
             <Grid item={true} xs={12}>
+            <div className={classes.margin1}>
               <Button
                 variant="contained"
                 color="primary"
@@ -230,6 +247,13 @@ function EditItemModal(props) {
 
                 {pending && <CircularProgress size={28} />}
               </Button>
+              {props.id && <Button
+                color="secondary"
+                onClick={() => handleDeleteItem()}
+              >
+                Delete
+              </Button>}
+              </div>
             </Grid>
           </Grid>
         </form>
