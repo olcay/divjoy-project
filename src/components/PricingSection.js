@@ -51,12 +51,12 @@ function PricingSection(props) {
   const plans = [
     {
       id: "starter",
-      name: "Starter",
+      name: "Free",
       price: "0",
       perks: [
-        "Lorem ipsum dolor sit amet",
-        "Consectetur adipiscing elit",
-        "Integer molestie lorem at massa",
+        "Create only 1 message",
+        "Send it to 1 recipient",
+        "Edit or postpone your message"
       ],
     },
     {
@@ -64,11 +64,8 @@ function PricingSection(props) {
       name: "Pro",
       price: "10",
       perks: [
-        "Lorem ipsum dolor sit amet",
-        "Consectetur adipiscing elit",
-        "Integer molestie lorem at massa",
-        "Faucibus porta lacus fringilla vel",
-        "Aenean sit amet erat nunc",
+        "Unlimited messages",
+        "+ Perks in the Free plan",
       ],
     },
     {
@@ -76,13 +73,8 @@ function PricingSection(props) {
       name: "Business",
       price: "100",
       perks: [
-        "Lorem ipsum dolor sit amet",
-        "Consectetur adipiscing elit",
-        "Integer molestie lorem at massa",
-        "Faucibus porta lacus fringilla vel",
-        "Aenean sit amet erat nunc",
-        "Lorem ipsum dolor sit amet",
-        "Consectetur adipiscing elit",
+        "Custom made features",
+        "+ Perks in the Pro plan",
       ],
     },
   ];
