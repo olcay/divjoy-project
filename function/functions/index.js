@@ -18,10 +18,11 @@ admin.initializeApp({
   databaseURL: `https://${functions.config().fb.projectId}.firebaseio.com`,
 });
 
-
+const useSendgrid = functions.config().sp.email === "sendgrid";
 
 // Initialize Firestore
 const db = admin.firestore();
+
 
 const transporter = nodemailer.createTransport({
   host: 'smtp.ethereal.email',
@@ -32,13 +33,17 @@ const transporter = nodemailer.createTransport({
   }
 });
 
-transporter.verify(function (error, success) {
-  if (error) {
-    logger.error("Error sending emails", error);
-  } else {
-    logger.info("Server is ready to take our messages", { structuredData: true });
-  }
-});
+if (!useSendgrid) {
+  transporter.verify(function (error, success) {
+    if (error) {
+      logger.error("Error sending emails", error);
+    } else {
+      logger.info("Server is ready to take our messages", { structuredData: true });
+    }
+  });
+}
+
+
 
 function getStartAndEndOfDay(date) {
   return [
@@ -86,8 +91,6 @@ async function sendMessages(context) {
   const [startOfToday, endOfToday] = getStartAndEndOfDay(today);
   const [startOfTenDaysLater, endOfTenDaysLater] = getStartAndEndOfDay(tenDaysLater);
 
-  logger.info("0-" + startOfToday + " " + endOfToday, { structuredData: true });
-
   const fromAddress = "pebble@lennys.app";
 
   try {
@@ -105,8 +108,7 @@ async function sendMessages(context) {
 
     // Prepare an array to hold email promises
     const emailPromises = [];
-
-    logger.info("1-" + snapshot.length, { structuredData: true });
+    const mailOptions = [];
 
     snapshot.forEach(async doc => {
       const messageData = doc;
@@ -125,13 +127,6 @@ async function sendMessages(context) {
           text: `Hello, ${messageData.name}! ${userData.name} has left a message for you.\n` + messageData.message
         };
 
-        logger.info("2.1-" + messageData.recipient, { structuredData: true });
-
-
-
-        // Send the email and push the promise to the array
-        emailPromises.push(transporter.sendMail(realMailOptions));
-
         // Prepare the email
         const senderNotificationMailOptions = {
           from: fromAddress,
@@ -140,46 +135,46 @@ async function sendMessages(context) {
           text: `Hello, ${userData.name}! Your message "${messageData.title}" for ${messageData.name} is sent today as below.\n\n` + messageData.message
         };
 
-        logger.info("2.2-" + userData.email, { structuredData: true });
+        if (useSendgrid) {
+          sendMail(doc.id, senderNotificationMailOptions);
+          sendMail(doc.id, realMailOptions);
+        } else {
+          // Send the email and push the promise to the array
+          emailPromises.push(transporter.sendMail(reminderMailOptions));
+          emailPromises.push(transporter.sendMail(realMailOptions));
+        }
 
-        // Send the email and push the promise to the array
-        emailPromises.push(transporter.sendMail(senderNotificationMailOptions));
       } else {
         // Send the link to postpone
-        logItemAction(doc.id, "postponeSent");
+        await logItemAction(doc.id, "postponeSent");
 
-        const message = `Hello, ${userData.name}! This is your scheduled email.\n` + messageData.message
-          + '\nIf you would like to postpone it click here: \n'
-          + 'Otherwise it will be sent on ' + new Date(messageData.sendDate).toDateString();
+        const message = `Hello, ${userData.name}! This is a reminder for your message:` + messageData.title
+          + '\n\nIf you would like to postpone it click here: https://www.lennys.app/dashboard'
+          + '\n\nOtherwise it will be sent on ' + new Date(messageData.sendDate).toDateString();
 
         // Prepare the email
-        const mailOptions = {
+        const reminderMailOptions = {
           from: fromAddress,
           to: userData.email,
           subject: 'You have a message to be delivered',
           text: message
         };
 
-        logger.info("3-" + userData.email, { structuredData: true });
-
-        sgMail
-          .send(mailOptions)
-          .then(() => {
-            logger.info('Email sent through send grid')
-          })
-          .catch((error) => {
-            logger.error(error)
-          });
-
         // Send the email and push the promise to the array
-        emailPromises.push(transporter.sendMail(mailOptions));
+        if (useSendgrid) {
+          sendMail(doc.id, reminderMailOptions);
+        } else {
+          emailPromises.push(transporter.sendMail(reminderMailOptions));
+        }
       }
 
 
     });
 
-    // Wait for all emails to be sent
-    await Promise.all(emailPromises);
+    if (!useSendgrid) {
+      // Wait for all emails to be sent
+      await Promise.all(emailPromises);
+    }
 
     logger.info("Emails sent successfully!", { structuredData: true });
   } catch (error) {
@@ -190,6 +185,17 @@ async function sendMessages(context) {
 }
 
 /**** HELPERS ****/
+
+function sendMail(id, mailData) {
+  sgMail
+    .send(mailData)
+    .then(() => {
+      logger.info('Email sent through Sendgrid for ' + id);
+    })
+    .catch((error) => {
+      logger.error(error);
+    });
+}
 
 // Format Firestore response
 function format(response) {
