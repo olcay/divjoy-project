@@ -71,9 +71,10 @@ function PricingSection(props) {
     {
       id: "business",
       name: "Business",
-      price: "100",
+      price: "-",
       perks: [
         "Custom made features",
+        "Trigger an HTTP endpoint",
         "+ Perks in the Pro plan",
       ],
     },
