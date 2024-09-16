@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Box from "@material-ui/core/Box";
 import Alert from "@material-ui/lab/Alert";
+import Snackbar from '@material-ui/core/Snackbar';
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -82,6 +83,21 @@ function DashboardItems(props) {
     }
 
     updateItem(item.id, { sendDate: newSendDate.getTime() });
+    showSuccess();
+  };
+
+  const [open, setOpen] = useState(false);
+
+  const showSuccess = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
   };
 
   return (
@@ -91,6 +107,12 @@ function DashboardItems(props) {
           <Alert severity="error">{itemsError.message}</Alert>
         </Box>
       )}
+
+      <Snackbar open={open} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          The message is postponed!
+        </Alert>
+      </Snackbar>
 
       <Paper className={classes.paperItems}>
         <Box
